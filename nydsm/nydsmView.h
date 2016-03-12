@@ -7,7 +7,17 @@
 //
 
 #import <ScreenSaver/ScreenSaver.h>
+#import <OpenGL/gl.h>
+#import <OpenGL/glu.h>
+#import "nydsmOpenGLView.h"
 
-@interface nydsmView : ScreenSaverView
+
+@interface nydsmView : ScreenSaverView{
+
+  NSOpenGLView *glView;
+  GLfloat rotation;
+}
+
+- (void)setUpOpenGL;
 
 @end

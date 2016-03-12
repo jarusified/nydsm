@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		666061361C92CD4200CD8461 /* nydsmView.h in Headers */ = {isa = PBXBuildFile; fileRef = 666061351C92CD4200CD8461 /* nydsmView.h */; };
 		666061381C92CD4200CD8461 /* nydsmView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666061371C92CD4200CD8461 /* nydsmView.m */; };
+		66D28C9D1C932B9600D06316 /* nydsmOpenGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 66D28C9B1C932B9600D06316 /* nydsmOpenGLView.h */; };
+		66D28C9E1C932B9600D06316 /* nydsmOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D28C9C1C932B9600D06316 /* nydsmOpenGLView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -16,6 +18,8 @@
 		666061351C92CD4200CD8461 /* nydsmView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nydsmView.h; sourceTree = "<group>"; };
 		666061371C92CD4200CD8461 /* nydsmView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = nydsmView.m; sourceTree = "<group>"; };
 		666061391C92CD4200CD8461 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		66D28C9B1C932B9600D06316 /* nydsmOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nydsmOpenGLView.h; sourceTree = "<group>"; };
+		66D28C9C1C932B9600D06316 /* nydsmOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nydsmOpenGLView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +55,8 @@
 				666061351C92CD4200CD8461 /* nydsmView.h */,
 				666061371C92CD4200CD8461 /* nydsmView.m */,
 				666061391C92CD4200CD8461 /* Info.plist */,
+				66D28C9B1C932B9600D06316 /* nydsmOpenGLView.h */,
+				66D28C9C1C932B9600D06316 /* nydsmOpenGLView.m */,
 			);
 			path = nydsm;
 			sourceTree = "<group>";
@@ -63,6 +69,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				666061361C92CD4200CD8461 /* nydsmView.h in Headers */,
+				66D28C9D1C932B9600D06316 /* nydsmOpenGLView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66D28C9E1C932B9600D06316 /* nydsmOpenGLView.m in Sources */,
 				666061381C92CD4200CD8461 /* nydsmView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,6 +270,7 @@
 				6660613E1C92CD4200CD8461 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -14,9 +14,58 @@
 {
     self = [super initWithFrame:frame isPreview:isPreview];
     if (self) {
+        NSOpenGLPixelFormatAttribute attributes[] = {
+            NSOpenGLPFAAccelerated,
+            NSOpenGLPFADepthSize, 16,
+            NSOpenGLPFAMinimumPolicy,
+            NSOpenGLPFAClosestPolicy,
+            0 };
+        NSOpenGLPixelFormat *format;
+        format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+        
+        glView = [[NSOpenGLView alloc] initWithFrame:NSZeroRect pixelFormat:format];
+        if (!glView)
+        {
+            NSLog( @"Couldn't initialize OpenGL view." );
+            return nil;
+        } 
+        [self addSubview:glView]; 
+        [self setUpOpenGL];
         [self setAnimationTimeInterval:1/30.0];
     }
     return self;
+}
+
+- (void)setUpOpenGL
+{
+    [[glView openGLContext] makeCurrentContext];
+    
+    glShadeModel( GL_SMOOTH );
+    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+    glClearDepth( 1.0f );
+    glEnable( GL_DEPTH_TEST );
+    glDepthFunc( GL_LEQUAL );
+    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+    
+    rotation = 0.0f;
+}
+
+- (void)setFrameSize:(NSSize)newSize
+{
+    [super setFrameSize:newSize];
+    [glView setFrameSize:newSize];
+    
+    [[glView openGLContext] makeCurrentContext];
+    
+    // Reshape
+    glViewport( 0, 0, (GLsizei)newSize.width, (GLsizei)newSize.height );
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    gluPerspective( 45.0f, (GLfloat)newSize.width / (GLfloat)newSize.height, 0.1f, 100.0f );
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+    
+    [[glView openGLContext] update];
 }
 
 - (void)startAnimation
@@ -32,54 +81,52 @@
 - (void)drawRect:(NSRect)rect
 {
     [super drawRect:rect];
+    [[glView openGLContext] makeCurrentContext];
+    
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glLoadIdentity();
+    
+    glTranslatef( -1.5f, 0.0f, -6.0f );
+    glRotatef( rotation, 0.0f, 1.0f, 0.0f );
+    
+    glBegin( GL_TRIANGLES );
+    {
+        glColor3f( 1.0f, 0.0f, 0.0f );
+        glVertex3f( 0.0f,  1.0f, 0.0f );
+        glColor3f( 0.0f, 1.0f, 0.0f );
+        glVertex3f( -1.0f, -1.0f, 1.0f );
+        glColor3f( 0.0f, 0.0f, 1.0f );
+        glVertex3f( 1.0f, -1.0f, 1.0f );
+        
+        glColor3f( 1.0f, 0.0f, 0.0f );
+        glVertex3f( 0.0f, 1.0f, 0.0f );
+        glColor3f( 0.0f, 0.0f, 1.0f );
+        glVertex3f( 1.0f, -1.0f, 1.0f );
+        glColor3f( 0.0f, 1.0f, 0.0f );
+        glVertex3f( 1.0f, -1.0f, -1.0f );
+        
+        glColor3f( 1.0f, 0.0f, 0.0f );
+        glVertex3f( 0.0f, 1.0f, 0.0f );
+        glColor3f( 0.0f, 1.0f, 0.0f );
+        glVertex3f( 1.0f, -1.0f, -1.0f );
+        glColor3f( 0.0f, 0.0f, 1.0f );
+        glVertex3f( -1.0f, -1.0f, -1.0f );
+        
+        glColor3f( 1.0f, 0.0f, 0.0f );
+        glVertex3f( 0.0f, 1.0f, 0.0f );
+        glColor3f( 0.0f, 0.0f, 1.0f );
+        glVertex3f( -1.0f, -1.0f, -1.0f );
+        glColor3f( 0.0f, 1.0f, 0.0f );
+        glVertex3f( -1.0f, -1.0f, 1.0f );  
+    }
+    glEnd();
+    
+    glFlush();
 }
 
 - (void)animateOneFrame
 {
-    NSBezierPath *path;
-    NSRect rect;
-    NSSize size;
-    NSColor *color;
-    float red, green, blue, alpha;
-    int shapeType;
     
-    size = [self bounds].size;
-    rect.size = NSMakeSize(SSRandomFloatBetween(size.width/100.0, size.width/100.0), SSRandomFloatBetween(size.height/100.0, size.height/100.0));
-    rect.origin = SSRandomPointForSizeWithinRect(rect.size, [self bounds]);
-    shapeType = SSRandomIntBetween(0, 2);
-    
-    switch (shapeType) {
-        case 0:
-            path = [NSBezierPath bezierPathWithRect:rect];
-            break;
-            
-        case 1:
-            path = [NSBezierPath bezierPathWithOvalInRect:rect];
-            break;
-            
-        default:{
-            float startAngle, endAngle, radius;
-            NSPoint point;
-            startAngle = SSRandomFloatBetween(0.0, 360.0);
-            endAngle = SSRandomFloatBetween(startAngle, 360.0 + startAngle);
-            radius = rect.size.width <= rect.size.height ? rect.size.width/2 : rect.size.height/2;
-            point = NSMakePoint(rect.origin.x + rect.size.width/2 , rect.origin.y + rect.size.height/2);
-            path = [NSBezierPath bezierPath];
-            [path appendBezierPathWithArcWithCenter:point radius:radius startAngle:startAngle endAngle:endAngle clockwise:SSRandomIntBetween(0, 1)];
-            break;
-        }
-    }
-    
-    red = SSRandomFloatBetween(0.0, 255.0)/255.0;
-    green = SSRandomFloatBetween(0.0, 255.0)/255.0;
-    blue = SSRandomFloatBetween(0.0, 255.0)/255.0;
-    alpha = SSRandomFloatBetween(0.0, 255.0)/255.0;
-    
-    color = [NSColor colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
-    [color set];
-    [path stroke];
-   
-    return;
 }
 
 - (BOOL)hasConfigureSheet
